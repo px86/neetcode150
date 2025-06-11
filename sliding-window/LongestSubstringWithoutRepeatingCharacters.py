@@ -11,8 +11,5 @@ class Solution:
                 chars.remove(s[l])
                 l += 1
             chars.add(s[r])
-            winlen = r - l + 1
-            if winlen > maxlen:
-                maxlen = winlen
-            r += 1
+            maxlen = max(maxlen, r - l + 1)
         return maxlen

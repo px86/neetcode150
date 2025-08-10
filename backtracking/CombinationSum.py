@@ -1,32 +1,31 @@
 # https://neetcode.io/problems/combination-target-sum?list=neetcode150
 
-from typing import List
-
 
 class Solution:
     def __init__(self):
-        self.solutions = []
+        self.nums: list[int] | None = None
+        self.solutions: list[list[int]] | None = None
+        self.current_set: list[list[int]] | None = None
 
-    def _combinationSum(self, nums, current_set, target):
-        # print(f"{nums=}, {current_set=}, {target=}")
-        if len(nums) == 0:
+    def _combinationSum(self, index: int, target: int):
+        if index == len(self.nums):
             return
 
-        if nums[0] == target:
-            solution = current_set.copy()
-            solution.append(nums[0])
-            self.solutions.append(solution)
-            return self._combinationSum(nums[1:], current_set, target)
+        if self.nums[index] == target:
+            self.current_set.append(self.nums[index])
+            self.solutions.append(self.current_set.copy())
+            self.current_set.pop()
 
-        if nums[0] < target:
-            s1 = current_set.copy()
-            s1.append(nums[0])
-            self._combinationSum(nums, s1, target - nums[0])
+        elif self.nums[index] < target:
+            self.current_set.append(self.nums[index])
+            self._combinationSum(index, target - self.nums[index])
+            self.current_set.pop()
 
-        s2 = current_set.copy()
-        self._combinationSum(nums[1:], s2, target)
+        self._combinationSum(index + 1, target)
 
-    def combinationSum(self, nums: List[int], target: int) -> List[List[int]]:
+    def combinationSum(self, nums: list[int], target: int) -> list[list[int]]:
+        self.nums = nums
         self.solutions = []
-        self._combinationSum(nums, [], target)
+        self.current_set = []
+        self._combinationSum(0, target)
         return self.solutions

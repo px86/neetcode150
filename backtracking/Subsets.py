@@ -1,23 +1,24 @@
 # https://neetcode.io/problems/subsets?list=neetcode150
 
-from typing import List
-
 
 class Solution:
     def __init__(self):
-        self.all_subsets = []
+        self.nums: list[int] | None = None
+        self.solution: list[list[int]] = []
+        self.current_set: list[int] | None = None
 
-    def _subsets(self, nums, current_set):
-        if len(nums) == 0:
-            self.all_subsets.append(current_set)
+    def _subsets(self, index: int) -> None:
+        if index == len(self.nums):
+            self.solution.append(self.current_set.copy())
             return
-        s1 = current_set.copy()
-        self._subsets(nums[1:], s1)
-        s2 = current_set.copy()
-        s2.append(nums[0])
-        self._subsets(nums[1:], s2)
+        self.current_set.append(self.nums[index])
+        self._subsets(index + 1)
+        self.current_set.pop()
+        self._subsets(index + 1)
 
-    def subsets(self, nums: List[int]) -> List[List[int]]:
-        self.all_subsets = []
-        self._subsets(nums, [])
-        return self.all_subsets
+    def subsets(self, nums: list[int]) -> list[list[int]]:
+        self.nums = nums
+        self.solution = []
+        self.current_set = []
+        self._subsets(0)
+        return self.solution
